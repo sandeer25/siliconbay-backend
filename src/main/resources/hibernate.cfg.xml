@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/siliconbay?useSSL=false&amp;allowPublicKeyRetrieval=true</property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.connection.password">Saneth2005@mysql</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
+        <property name="hibernate.show_sql">true</property>
+
+        <mapping class="com.hogger.siliconbay.entity.Architecture"/>
+        <mapping class="com.hogger.siliconbay.entity.BaseEntity"/>
+        <mapping class="com.hogger.siliconbay.entity.Brand"/>
+        <mapping class="com.hogger.siliconbay.entity.Cart"/>
+        <mapping class="com.hogger.siliconbay.entity.CartItem"/>
+        <mapping class="com.hogger.siliconbay.entity.Category"/>
+        <mapping class="com.hogger.siliconbay.entity.DeliveryType"/>
+        <mapping class="com.hogger.siliconbay.entity.Discount"/>
+        <mapping class="com.hogger.siliconbay.entity.Manufacturer"/>
+        <mapping class="com.hogger.siliconbay.entity.Model"/>
+        <mapping class="com.hogger.siliconbay.entity.Order"/>
+        <mapping class="com.hogger.siliconbay.entity.OrderItem"/>
+        <mapping class="com.hogger.siliconbay.entity.PaymentMethod"/>
+        <mapping class="com.hogger.siliconbay.entity.PaymentType"/>
+        <mapping class="com.hogger.siliconbay.entity.Product"/>
+        <mapping class="com.hogger.siliconbay.entity.Return"/>
+        <mapping class="com.hogger.siliconbay.entity.Seller"/>
+        <mapping class="com.hogger.siliconbay.entity.Status"/>
+        <mapping class="com.hogger.siliconbay.entity.Stock"/>
+        <mapping class="com.hogger.siliconbay.entity.Transaction"/>
+        <mapping class="com.hogger.siliconbay.entity.User"/>
+        <mapping class="com.hogger.siliconbay.entity.UserPaymentInstrument"/>
+        <mapping class="com.hogger.siliconbay.entity.Wishlist"/>
+        <mapping class="com.hogger.siliconbay.entity.WishlistItem"/>
+    </session-factory>
+</hibernate-configuration>
