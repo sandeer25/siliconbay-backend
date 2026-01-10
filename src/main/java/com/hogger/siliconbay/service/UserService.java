@@ -8,7 +8,11 @@ import com.hogger.siliconbay.mail.VerificationMail;
 import com.hogger.siliconbay.provider.MailServiceProvider;
 import com.hogger.siliconbay.util.AppUtil;
 import com.hogger.siliconbay.util.HibernateUtil;
+import com.hogger.siliconbay.util.JwtUtil;
 import com.hogger.siliconbay.validation.Validator;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import jakarta.ws.rs.core.Context;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -156,5 +160,75 @@ public class UserService {
         return AppUtil.GSON.toJson(responseObject);
     }
 
-//    public String userLogin(UserDTO userDTO) {}
+    public String userLogin(UserDTO userDTO, @Context HttpServletRequest request) {
+        JsonObject responseObject = new JsonObject();
+        boolean status = false;
+        String message;
+
+        if (userDTO.getEmail() == null) {
+            message = "Email is required!";
+        } else if (userDTO.getEmail().isBlank()) {
+            message = "Email address can not be empty!";
+        } else if (!userDTO.getEmail().matches(Validator.EMAIL_VALIDATION)) {
+            message = "Please provide valid email address!";
+        } else if (userDTO.getPassword() == null) {
+            message = "Password is required!";
+        } else if (userDTO.getPassword().isBlank()) {
+            message = "Password can not be empty!";
+        } else if (!userDTO.getPassword().matches(Validator.PASSWORD_VALIDATION)) {
+            message = "Please provide valid password. \n " +
+                    "The password must be at least 8 characters long and include at least one uppercase letter, " +
+                    "one lowercase letter, one digit, and one special character";
+        } else {
+            Session hibernateSession = HibernateUtil.getSessionFactory().openSession();
+
+            User singleUser = hibernateSession.createNamedQuery("User.getByEmail", User.class)
+                    .setParameter("email", userDTO.getEmail())
+                    .getSingleResultOrNull();
+
+            if (singleUser == null) {
+                message = "Account not found. Please register first!";
+            } else {
+                if (!singleUser.getPassword().equals(userDTO.getPassword())) {
+                    message = "Incorrect password. Please try again!";
+
+                    hibernateSession.close();
+                    responseObject.addProperty("status", status);
+                    responseObject.addProperty("message", message);
+                    return AppUtil.GSON.toJson(responseObject);
+
+                } else {
+                    Status verifiedStatus = hibernateSession.createNamedQuery("Status.findByValue", Status.class)
+                            .setParameter("value", String.valueOf(Status.Type.VERIFIED))
+                            .getSingleResult();
+
+                    if (!singleUser.getStatus().equals(verifiedStatus)) {
+                        message = "Your account is not verified. Please verify first!";
+
+                    } else {
+                        String token = JwtUtil.generateToken(singleUser.getEmail(), singleUser.getId());
+
+                        status = true;
+                        message = "Login successful";
+
+                        responseObject.addProperty("token", token);
+
+                        JsonObject userObject = new JsonObject();
+                        userObject.addProperty("id", singleUser.getId());
+                        userObject.addProperty("email", singleUser.getEmail());
+                        userObject.addProperty("firstName", singleUser.getFirstName());
+                        userObject.addProperty("lastName", singleUser.getLastName());
+
+                        responseObject.add("user", userObject);
+                    }
+                }
+            }
+
+            hibernateSession.close();
+        }
+
+        responseObject.addProperty("status", status);
+        responseObject.addProperty("message", message);
+        return AppUtil.GSON.toJson(responseObject);
+    }
 }

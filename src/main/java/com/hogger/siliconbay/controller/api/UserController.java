@@ -22,28 +22,28 @@ public class UserController {
         return Response.ok().entity(responseJson).build();
     }
 
-//    @Path("/login")
-//    @POST
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response login(String jsonData, @Context HttpServletRequest request) {
-//        UserDTO userDTO = AppUtil.GSON.fromJson(jsonData, UserDTO.class);
-//        String responseJson = new UserService().userLogin(userDTO, request);
-//        return Response.ok().entity(responseJson).build();
-//    }
-
-    @IsUser
-    @Path("/logout")
-    @GET
-    public Response logout(@Context HttpServletRequest request) {
-        HttpSession httpSession = request.getSession(false);
-
-        if (httpSession != null && httpSession.getAttribute("user") != null) {
-            httpSession.invalidate();
-            return Response.status(Response.Status.OK).build();
-        } else {
-            System.out.println("else");
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
+    @Path("/login")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response login(String jsonData, @Context HttpServletRequest request) {
+        UserDTO userDTO = AppUtil.GSON.fromJson(jsonData, UserDTO.class);
+        String responseJson = new UserService().userLogin(userDTO, request);
+        return Response.ok().entity(responseJson).build();
     }
+
+//    @IsUser
+//    @Path("/logout")
+//    @GET
+//    public Response logout(@Context HttpServletRequest request) {
+//        HttpSession httpSession = request.getSession(false);
+//
+//        if (httpSession != null && httpSession.getAttribute("user") != null) {
+//            httpSession.invalidate();
+//            return Response.status(Response.Status.OK).build();
+//        } else {
+//            System.out.println("else");
+//            return Response.status(Response.Status.BAD_REQUEST).build();
+//        }
+//    }
 }
