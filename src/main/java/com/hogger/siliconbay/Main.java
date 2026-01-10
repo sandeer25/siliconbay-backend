@@ -17,7 +17,7 @@ public class Main {
     private static final int SERVER_PORT = 8080;
     private static final String CONTEXT_PATH = "/siliconbay";
 
-    static void main(String[] args) {
+    public static void main(String[] args) {
         try {
             // Initialize and configure the embedded Tomcat server
             Tomcat tomcat = new Tomcat();
